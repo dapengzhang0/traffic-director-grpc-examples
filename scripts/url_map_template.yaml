@@ -1,7 +1,7 @@
 # Populate project ID as: PROJECT_ID = $(gcloud config list --format 'value(core.project)').
 
-defaultService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}$grpcwallet-account-service
-name: ${TEST_PREFIX}$grpcwallet-url-map
+defaultService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-account-service
+name: ${TEST_PREFIX}grpcwallet-url-map
 
 hostRules:
   - hosts:
@@ -26,7 +26,7 @@ pathMatchers:
       priority: 1
       routeAction:
         weightedBackendServices:
-        - backendService: projects/$PROJECT_ID/global/backendServices/${TEST_PREFIX}grpcwallet-account-service
+        - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-account-service
           weight: 100
         faultInjectionPolicy:
           abort:
@@ -56,9 +56,9 @@ pathMatchers:
         priority: 2
         routeAction:
           weightedBackendServices:
-          - backendService: projects/$PROJECT_ID/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v2-service
+          - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v2-service
             weight: 40
-          - backendService: projects/$PROJECT_ID/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v1-service
+          - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v1-service
             weight: 60
           retryPolicy:
             retryConditions:
