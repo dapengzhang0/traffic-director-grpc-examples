@@ -5,10 +5,12 @@
 
 set -x
 
-gcloud compute health-checks create grpc grpcwallet-health-check \
+TEST_PREFIX=${TEST_PREFIX-""}
+
+gcloud compute health-checks create grpc ${TEST_PREFIX}grpcwallet-health-check \
     --use-serving-port
 
-gcloud compute firewall-rules create grpcwallet-allow-health-checks \
+gcloud compute firewall-rules create ${TEST_PREFIX}grpcwallet-allow-health-checks \
     --network default --action allow --direction INGRESS \
     --source-ranges 35.191.0.0/16,130.211.0.0/22 \
     --target-tags allow-health-checks \

@@ -6,16 +6,18 @@
 set -x
 
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
-gcloud compute url-maps import grpcwallet-url-map --source=<(sed -e "s/\${PROJECT_ID}/${PROJECT_ID}/" url_map_template.yaml)
+TEST_PREFIX=${TEST_PREFIX-""}
+TEST_PORT=${TEST_PORT-"80"}
+gcloud compute url-maps import ${TEST_PREFIX}grpcwallet-url-map --source=<(sed -e "s/\${PROJECT_ID}/${PROJECT_ID}/;s/\${TEST_PREFIX}/${TEST_PREFIX}/" url_map_template.yaml)
 
-gcloud compute target-grpc-proxies create grpcwallet-proxy \
-    --url-map grpcwallet-url-map \
+gcloud compute target-grpc-proxies create ${TEST_PREFIX}grpcwallet-proxy \
+    --url-map ${TEST_PREFIX}grpcwallet-url-map \
     --validate-for-proxyless
 
-gcloud compute forwarding-rules create grpcwallet-forwarding-rule \
+gcloud compute forwarding-rules create ${TEST_PREFIX}grpcwallet-forwarding-rule \
     --global \
     --load-balancing-scheme=INTERNAL_SELF_MANAGED \
     --address=0.0.0.0 --address-region=us-central1 \
-    --target-grpc-proxy=grpcwallet-proxy \
-    --ports 80 \
+    --target-grpc-proxy=${TEST_PREFIX}grpcwallet-proxy \
+    --ports ${TEST_PORT} \
     --network default
