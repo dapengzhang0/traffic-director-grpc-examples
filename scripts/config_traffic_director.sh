@@ -8,7 +8,7 @@ set -x
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 TEST_PREFIX=${TEST_PREFIX-""}
 TEST_PORT=${TEST_PORT-"80"}
-gcloud compute url-maps import ${TEST_PREFIX}grpcwallet-url-map --source=<(sed -e "s/\${PROJECT_ID}/${PROJECT_ID}/;s/\${TEST_PREFIX}/${TEST_PREFIX}/" url_map_template.yaml)
+gcloud compute url-maps import ${TEST_PREFIX}grpcwallet-url-map --source=<(sed -e "s/\${PROJECT_ID}/${PROJECT_ID}/;s/\${TEST_PREFIX}/${TEST_PREFIX}/;s/\${TEST_PORT}/${TEST_PORT}/" url_map_template.yaml)
 
 gcloud compute target-grpc-proxies create ${TEST_PREFIX}grpcwallet-proxy \
     --url-map ${TEST_PREFIX}grpcwallet-url-map \

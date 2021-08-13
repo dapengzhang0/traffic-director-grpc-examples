@@ -5,13 +5,13 @@ name: ${TEST_PREFIX}grpcwallet-url-map
 
 hostRules:
   - hosts:
-      - ${TEST_PREFIX}account.grpcwallet.io
+      - "${TEST_PREFIX}account.grpcwallet.io:${TEST_PORT}"
     pathMatcher: grpcwallet-account-path-matcher
   - hosts:
-      - ${TEST_PREFIX}stats.grpcwallet.io
+      - "${TEST_PREFIX}stats.grpcwallet.io:${TEST_PORT}"
     pathMatcher: grpcwallet-stats-path-matcher
   - hosts:
-      - ${TEST_PREFIX}wallet.grpcwallet.io
+      - "${TEST_PREFIX}wallet.grpcwallet.io:${TEST_PORT}"
     pathMatcher: grpcwallet-wallet-path-matcher
 
 pathMatchers:
