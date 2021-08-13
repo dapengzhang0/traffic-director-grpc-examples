@@ -23,7 +23,7 @@ pathMatchers:
         headerMatches:
         - headerName: route
           exactMatch: account-fault
-      priority: 1
+      priority: 0
       routeAction:
         weightedBackendServices:
         - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-account-service
@@ -53,7 +53,7 @@ pathMatchers:
           headerMatches:
           - headerName: membership
             exactMatch: premium
-        priority: 2
+        priority: 0
         routeAction:
           weightedBackendServices:
           - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v2-service
@@ -67,7 +67,7 @@ pathMatchers:
 
       - matchRules:
           - fullPathMatch: /grpc.examples.wallet.Wallet/FetchBalance
-        priority: 3
+        priority: 1
         routeAction:
           weightedBackendServices:
             - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v2-service
@@ -76,7 +76,7 @@ pathMatchers:
               weight: 60
       - matchRules:
           - prefixMatch: /grpc.examples.wallet.Wallet/
-        priority: 4
+        priority: 2
         routeAction:
           weightedBackendServices:
             - backendService: projects/${PROJECT_ID}/global/backendServices/${TEST_PREFIX}grpcwallet-wallet-v2-service
