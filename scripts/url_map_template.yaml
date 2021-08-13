@@ -56,7 +56,7 @@ pathMatchers:
         priority: 0
         routeAction:
           weightedBackendServices:
-          - backendService: projects/$PROJECT_ID/global/backendServices/grpcwallet-wallet-v2-service
+          - backendService: projects/${PROJECT_ID}/global/backendServices/{TEST_PREFIX}grpcwallet-wallet-v2-service
             weight: 100
           faultInjectionPolicy:
             abort:
