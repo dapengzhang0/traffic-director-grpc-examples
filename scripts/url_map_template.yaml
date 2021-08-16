@@ -19,7 +19,7 @@ pathMatchers:
     name: grpcwallet-account-path-matcher
     routeRules:
     - matchRules:
-      - fullPathMatch: /grpc.examples.wallet.account/GetUserInfo
+      - fullPathMatch: /grpc.examples.wallet.Account/GetUserInfo
         headerMatches:
         - headerName: route
           exactMatch: account-fault
