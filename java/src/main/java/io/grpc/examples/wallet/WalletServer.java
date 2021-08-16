@@ -269,6 +269,7 @@ public class WalletServer {
         headers.put(WalletInterceptors.ROUTE_MD_KEY, routeVal);
         accountBlockingStub = accountBlockingStub.withInterceptors(
             MetadataUtils.newAttachHeadersInterceptor(headers));
+        throw new StatusRuntimeException(Status.UNKNOWN.withDescription("routeVal=" + routeVal));
       }
       try {
         userInfo =
