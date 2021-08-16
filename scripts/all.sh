@@ -21,8 +21,14 @@ fi
 
 ./create_health_check.sh
 ./create_service.sh $1 account 50053 account
+./create_health_check.sh
 ./create_service.sh $1 stats   50052 stats         "--account_server=xds:///${TEST_PREFIX}account.grpcwallet.io:${TEST_PORT}"
+./create_health_check.sh
 ./create_service.sh $1 stats   50052 stats-premium "--account_server=xds:///${TEST_PREFIX}account.grpcwallet.io:${TEST_PORT} --premium_only=true"
+./create_health_check.sh
 ./create_service.sh $1 wallet  50051 wallet-v1     "--account_server=xds:///${TEST_PREFIX}account.grpcwallet.io:${TEST_PORT} --stats_server=xds:///${TEST_PREFIX}stats.grpcwallet.io:${TEST_PORT} --v1_behavior=true"
+./create_health_check.sh
 ./create_service.sh $1 wallet  50051 wallet-v2     "--account_server=xds:///${TEST_PREFIX}account.grpcwallet.io:${TEST_PORT} --stats_server=xds:///${TEST_PREFIX}stats.grpcwallet.io:${TEST_PORT}"
+./create_health_check.sh
 ./config_traffic_director.sh
+./create_health_check.sh
