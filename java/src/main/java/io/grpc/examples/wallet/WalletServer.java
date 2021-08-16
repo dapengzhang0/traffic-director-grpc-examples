@@ -191,7 +191,8 @@ public class WalletServer {
                   ServerInterceptors.intercept(
                       new WalletImpl(accountChannel, statsChannel, v1Behavior),
                       new WalletInterceptors.HostnameInterceptor(),
-                      new WalletInterceptors.AuthInterceptor()))
+                      new WalletInterceptors.AuthInterceptor(),
+                      new RouteHeaderInterceptor()))
               .addService(ProtoReflectionService.newInstance())
               .addService(health.getHealthService())
               .build()
@@ -269,7 +270,6 @@ public class WalletServer {
         headers.put(WalletInterceptors.ROUTE_MD_KEY, routeVal);
         accountBlockingStub = accountBlockingStub.withInterceptors(
             MetadataUtils.newAttachHeadersInterceptor(headers));
-        throw new StatusRuntimeException(Status.UNKNOWN.withDescription("routeVal=" + routeVal));
       }
       try {
         userInfo =
