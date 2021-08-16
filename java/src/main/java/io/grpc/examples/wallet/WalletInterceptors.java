@@ -118,9 +118,15 @@ final class WalletInterceptors {
     public <ReqT, RespT> Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call,
         Metadata requestHeaders, ServerCallHandler<ReqT, RespT> next) {
       String routeVal = requestHeaders.get(ROUTE_MD_KEY);
-      Context newContext =
-          Context.current().withValue(ROUTE_KEY, routeVal);
-      return Contexts.interceptCall(newContext, call, requestHeaders, next);
+      if (routeVal == null) {
+        call.close(Status.UNKNOWN.withDescription("route header is null"), new Metadata());
+      } else {
+        call.close(Status.UNKNOWN.withDescription("route header is " + routeVal), new Metadata());
+      }
+      return new Listener<ReqT>() {};
+      // Context newContext =
+      //    Context.current().withValue(ROUTE_KEY, routeVal);
+      //return Contexts.interceptCall(newContext, call, requestHeaders, next);
     }
   }
 }
