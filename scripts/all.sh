@@ -18,8 +18,8 @@ fi
 
 ./create_health_check.sh
 ./create_service.sh $1 account 50053 account
-./create_service.sh $1 stats   50052 stats         '--account_server="xds:///account.grpcwallet.io"'
-./create_service.sh $1 stats   50052 stats-premium '--account_server="xds:///account.grpcwallet.io" --premium_only=true'
-./create_service.sh $1 wallet  50051 wallet-v1     '--account_server="xds:///account.grpcwallet.io" --stats_server="xds:///stats.grpcwallet.io" --v1_behavior=true'
-./create_service.sh $1 wallet  50051 wallet-v2     '--account_server="xds:///account.grpcwallet.io" --stats_server="xds:///stats.grpcwallet.io"'
+./create_service.sh $1 stats   50052 stats         '--account_server="xds:///account.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}"'
+./create_service.sh $1 stats   50052 stats-premium '--account_server="xds:///account.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}" --premium_only=true'
+./create_service.sh $1 wallet  50051 wallet-v1     '--account_server="xds:///account.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}" --stats_server="xds:///stats.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}" --v1_behavior=true'
+./create_service.sh $1 wallet  50051 wallet-v2     '--account_server="xds:///account.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}" --stats_server="xds:///stats.${TEST_PREFIX}-grpcwallet.io:${TEST_PORT}"'
 ./config_traffic_director.sh

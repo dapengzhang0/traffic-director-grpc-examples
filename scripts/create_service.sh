@@ -55,7 +55,7 @@ git clone -b ${EXAMPLES_VERSION} --single-branch --depth=1 https://github.com/${
 ${build_script}
 sudo systemd-run -E GRPC_XDS_BOOTSTRAP=/root/td-grpc-bootstrap.json \"${server}\" --port=${port} --hostname_suffix=${hostname_suffix} $@"
 
-gcloud compute instance-templates create grpcwallet-${hostname_suffix}-template \
+gcloud compute instance-templates create ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-template \
     --scopes=https://www.googleapis.com/auth/cloud-platform \
     --tags=allow-health-checks \
     --image-family=debian-10 \
@@ -63,13 +63,13 @@ gcloud compute instance-templates create grpcwallet-${hostname_suffix}-template 
     --network-interface=no-address \
     --metadata-from-file=startup-script=<(echo "${startup_script}")
 
-gcloud compute instance-groups managed create grpcwallet-${hostname_suffix}-mig-us-central1 \
+gcloud compute instance-groups managed create ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-mig-us-central1 \
     --zone us-central1-a \
     --size=${size} \
-    --template=grpcwallet-${hostname_suffix}-template
+    --template=${TEST_PREFIX}-grpcwallet-${hostname_suffix}-template
 
-gcloud compute instance-groups set-named-ports grpcwallet-${hostname_suffix}-mig-us-central1 \
-    --named-ports=grpcwallet-${service_type}-port:${port} \
+gcloud compute instance-groups set-named-ports ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-mig-us-central1 \
+    --named-ports=${TEST_PREFIX}-grpcwallet-${service_type}-port:${port} \
     --zone us-central1-a 
 
 project_id="$(gcloud config list --format 'value(core.project)')"
@@ -77,14 +77,14 @@ project_id="$(gcloud config list --format 'value(core.project)')"
 backend_config="backends:
 - balancingMode: UTILIZATION
   capacityScaler: 1.0
-  group: projects/${project_id}/zones/us-central1-a/instanceGroups/grpcwallet-${hostname_suffix}-mig-us-central1
+  group: projects/${project_id}/zones/us-central1-a/instanceGroups/${TEST_PREFIX}-grpcwallet-${hostname_suffix}-mig-us-central1
 connectionDraining:
   drainingTimeoutSec: 0
 healthChecks:
-- projects/${project_id}/global/healthChecks/grpcwallet-health-check
+- projects/${project_id}/global/healthChecks/${TEST_PREFIX}-grpcwallet-health-check
 loadBalancingScheme: INTERNAL_SELF_MANAGED
-name: grpcwallet-${hostname_suffix}-service
-portName: grpcwallet-${service_type}-port
+name: ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-service
+portName: ${TEST_PREFIX}-grpcwallet-${service_type}-port
 protocol: GRPC"
 
 if [ "${hostname_suffix}" = "stats" ]; then
@@ -93,24 +93,24 @@ circuitBreakers:
   maxRequests: 1"
 fi
 
-gcloud compute backend-services import grpcwallet-${hostname_suffix}-service --global <<< "${backend_config}"
+gcloud compute backend-services import ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-service --global <<< "${backend_config}"
 
 if [ "${hostname_suffix}" = "wallet-v1" ]; then
     backend_config="backends:
 - balancingMode: UTILIZATION
   capacityScaler: 1.0
-  group: projects/${project_id}/zones/us-central1-a/instanceGroups/grpcwallet-${hostname_suffix}-mig-us-central1
+  group: projects/${project_id}/zones/us-central1-a/instanceGroups/${TEST_PREFIX}-grpcwallet-${hostname_suffix}-mig-us-central1
 connectionDraining:
   drainingTimeoutSec: 0
 healthChecks:
-- projects/${project_id}/global/healthChecks/grpcwallet-health-check
+- projects/${project_id}/global/healthChecks/${TEST_PREFIX}-grpcwallet-health-check
 loadBalancingScheme: INTERNAL_SELF_MANAGED
-name: grpcwallet-${hostname_suffix}-affinity-service
-portName: grpcwallet-${service_type}-port
+name: ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-affinity-service
+portName: ${TEST_PREFIX}-grpcwallet-${service_type}-port
 protocol: GRPC
 sessionAffinity: HEADER_FIELD
 localityLbPolicy: RING_HASH
 consistentHash:
   httpHeaderName: session_id"
-gcloud compute backend-services import grpcwallet-${hostname_suffix}-affinity-service --global <<< "${backend_config}"
+gcloud compute backend-services import ${TEST_PREFIX}-grpcwallet-${hostname_suffix}-affinity-service --global <<< "${backend_config}"
 fi
